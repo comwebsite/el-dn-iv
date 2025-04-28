@@ -1,272 +1,337 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Электронный Дневник</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: white;
-            color: #2c3e50;
-        }
-
-        header {
-            background-color: #1e90ff; /* Ярко-голубой цвет */
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
-
-        h1 {
-            margin: 0;
-            font-size: 26px;
-        }
-
-        .form-group {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 10px;
-        }
-
-        .input-field {
-            padding: 8px;
-            border: 1px solid #bdc3c7;
-            border-radius: 5px;
-            background-color: white;
-        }
-
-        main {
-            margin: 20px auto;
-            max-width: 95%;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        th, td {
-            border: 1px solid #bdc3c7;
-            padding: 10px;
-            text-align: center;
-        }
-
-        th {
-            background-color: #1e90ff; /* Акцентный голубой для заголовков таблицы */
-            color: white;
-        }
-
-        .grade-cell {
-            width: 30px;
-            height: 30px;
-            text-align: center;
-            padding: 2px;
-            border: 1px solid #bdc3c7;
-            border-radius: 3px;
-            background-color: #f5faff; /* Лёгкий голубой фон ячеек */
-            font-size: 14px;
-        }
-
-        .average-cell {
-            width: 60px; /* Шире, чтобы вместить 9.99 */
-            height: 30px;
-            text-align: center;
-            padding: 2px;
-            border: 1px solid #bdc3c7;
-            border-radius: 3px;
-            background-color: #f5faff;
-            font-size: 14px;
-        }
-
-        footer {
-            background-color: #1e90ff;
-            color: white;
-            text-align: center;
-            padding: 10px;
-            position: relative;
-            margin-top: 20px;
-        }
-
-        /* Медиа-запросы для мобильных устройств */
-        @media (max-width: 768px) {
-            body {
-                font-size: 14px; /* Уменьшение общего шрифта для удобства */
-            }
-
-            .form-group {
-                flex-direction: column; /* Элементы группы в колонку */
-                align-items: center;
-                gap: 10px;
-            }
-
-            table {
-                font-size: 12px; /* Сокращение текста в таблице */
-            }
-
-            .grade-cell {
-                width: 25px; /* Уменьшение размера ячеек на мобильных устройствах */
-                height: 25px;
-            }
-
-            .average-cell {
-                width: 40px; /* Коррекция для широкой ячейки */
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Электронный дневник</title>
+  <style>
+    /* Сброс и базовые стили для всей страницы */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f7f7;
+      padding: 20px;
+    }
+    /* Контейнер растянут на всю ширину */
+    .container {
+      width: 100%;
+      padding: 20px;
+    }
+    h1, h2, h3 {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    /* Данные об ученике */
+    #student-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #ccc;
+    }
+    #student-info label {
+      font-weight: bold;
+      margin-bottom: 5px;
+      display: block;
+    }
+    #student-info input {
+      width: 100%;
+      padding: 5px 8px;
+    }
+    /* Двухколоночное расположение блоков */
+    .columns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    /* Левая колонка – информация об ученике (ещё уже) */
+    #blank-column {
+      flex: 0.6;
+      padding: 15px;
+      background: #fafafa;
+    }
+    #subjects-column {
+      flex: 1.4;
+      padding: 15px;
+      background: #fafafa;
+    }
+    .column label {
+      font-weight: bold;
+      margin: 8px 0 4px;
+      display: block;
+    }
+    .column input[type="text"],
+    .column input[type="number"],
+    .column textarea {
+      width: 100%;
+      padding: 6px;
+      margin-bottom: 10px;
+    }
+    /* Таблица с предметами */
+    #subjects-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    #subjects-table th,
+    #subjects-table td {
+      border: 1px solid #ddd;
+      padding: 5px;
+      text-align: center;
+    }
+    /* Стили для выпадающих списков и инпутов */
+    .grade-select {
+      width: 50px;
+      padding: 2px;
+      text-align: center;
+    }
+    .avg-input,
+    .quarter-input {
+      width: 80px;
+      padding: 4px;
+      text-align: center;
+    }
+    button {
+      align-self: center;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    @media (max-width: 600px) {
+      .columns {
+        flex-direction: column;
+      }
+    }
+  </style>
+  
+  <!-- Подключаем Firebase (используем версии 8.x для простоты) -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  
+  <script>
+    // Замените эти данные на ваши конфигурационные данные из Firebase
+    var firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      databaseURL: "https://YOUR_PROJECT_ID.firebaseio.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+    // Инициализируем Firebase
+    firebase.initializeApp(firebaseConfig);
+  </script>
+  
 </head>
 <body>
-    <header>
-        <h1>Электронный Дневник</h1>
-        <div class="form-group">
-            <label>Имя:</label> <input type="text" id="name" class="input-field">
-            <label>Курс:</label> <input type="text" id="course" class="input-field">
-            <label>Класс:</label> <input type="text" id="class" class="input-field">
-            <label>Организация:</label> <input type="text" id="organization" class="input-field">
+  <div class="container">
+    <h1>Электронный дневник</h1>
+    <form id="diaryForm">
+      <!-- Данные об ученике -->
+      <section id="student-info">
+        <div>
+          <label for="name">Имя умельца:</label>
+          <input type="text" id="name" name="name" required />
         </div>
-    </header>
-    <main>
-        <table>
+        <div>
+          <label for="organization">Организация:</label>
+          <input type="text" id="organization" name="organization" required />
+        </div>
+        <div>
+          <label for="class">Класс (буква):</label>
+          <input type="text" id="class" name="class" maxlength="1" pattern="[А-Яа-яA-Za-z]" required />
+        </div>
+        <div>
+          <label for="course">Курс (цифра от 1 до 11):</label>
+          <input type="number" id="course" name="course" min="1" max="11" required />
+        </div>
+      </section>
+      
+      <div class="columns">
+        <!-- Левая колонка – Информация о ученике -->
+        <div class="column" id="blank-column">
+          <h3>Информация о ученике</h3>
+          <label for="quarter">Четверть (например, Апрель - Май):</label>
+          <input type="text" id="quarter" name="quarter" placeholder="Апрель - Май" required />
+          <label for="date">Дата (с какой по какую, можно использовать точки/запятые):</label>
+          <input type="text" id="date" name="date" placeholder="01.01.2025 - 31.01.2025" required />
+          <label for="remarks">Замечания:</label>
+          <textarea id="remarks" name="remarks" rows="2"></textarea>
+          <label for="admin-signature">Подпись администратора:</label>
+          <input type="text" id="admin-signature" name="admin-signature" />
+          <label for="student-signature">Подпись умельца:</label>
+          <input type="text" id="student-signature" name="student-signature" />
+        </div>
+        
+        <!-- Правая колонка – Предметы -->
+        <div class="column" id="subjects-column">
+          <h3>Предметы</h3>
+          <table id="subjects-table">
             <thead>
-                <tr>
-                    <th>Четверть</th>
-                    <th>Дата начала и конца</th>
-                    <th>Замечания</th>
-                </tr>
-                <tr>
-                    <td><input type="text" placeholder="Четверть"></td>
-					<td><input type="text" placeholder="Дата"></td>
-                    <td><input type="text" placeholder="Замечания"></td>
-                </tr>
+              <tr>
+                <th>Предмет</th>
+                <th colspan="15">Оценки</th>
+                <th>Средний балл</th>
+                <th>Четвертная оценка</th>
+              </tr>
             </thead>
-            <thead>
-                <tr>
-                    <th>Предмет</th>
-                    <th>Оценки</th>
-                    <th>Средняя оценка</th>
-                    <th>Четвертная оценка</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Английский язык</td>
-                    <td>
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                    </td>
-                    <td><input type="number" placeholder="Средняя" class="average-cell"></td>
-                    <td><input type="number" placeholder="Четвертная" class="average-cell"></td>
-                </tr>
-                <tr>
-                    <td>Алгебра</td>
-                    <td>
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                    </td>
-                    <td><input type="number" placeholder="Средняя" class="average-cell"></td>
-                    <td><input type="number" placeholder="Четвертная" class="average-cell"></td>
-                </tr>
-                <td>Белорусский язык</td>
-                    <td>
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                    </td>
-                    <td><input type="number" placeholder="Средняя" class="average-cell"></td>
-                    <td><input type="number" placeholder="Четвертная" class="average-cell"></td>
-                </tr>
-				<td>Информатика</td>
-                    <td>
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell"> 
-                    </td>
-                    <td><input type="number" placeholder="Средняя" class="average-cell"></td>
-                    <td><input type="number" placeholder="Четвертная" class="average-cell"></td>
-                <tr>
-                    <td>География</td>
-                    <td>
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                    </td>
-					<td><input type="number" placeholder="Средняя" class="average-cell"></td>
-                    <td><input type="number" placeholder="Четвертная" class="average-cell"></td>
-                </tr>
-                <tr>
-                    <td>Русский язык</td>
-                    <td>
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                    </td>
-                    <td><input type="number" placeholder="Средняя" class="average-cell"></td>
-                    <td><input type="number" placeholder="Четвертная" class="average-cell"></td>
-                </tr>
-                     <td>Программирование</td>
-                    <td>
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-						<input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                    </td>
-                    <td><input type="number" placeholder="Средняя" class="average-cell"></td>
-                    <td><input type="number" placeholder="Четвертная" class="average-cell"></td>
-                </tr>
-                <tr>
-                    <td>Подготовка к экзамену</td>
-                    <td>
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                        <input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-						<input type="number" class="grade-cell"> <input type="number" class="grade-cell">
-                    </td>
-                    <td><input type="number" placeholder="Средняя" class="average-cell"></td>
-                    <td><input type="number" placeholder="Четвертная" class="average-cell"></td>
-
-                </tr>
-                </tr>
-            </tbody>
-        </table>
-    </main>
-    <footer>
-        <p>© Содружество Развивающихся Умельцев 2024-2025, Inc. Все права защищены.</p>
-    </footer>
+            <tbody id="subjects-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+      <button type="submit">Отправить</button>
+    </form>
+  </div>
+  
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const subjects = [
+        { code: "eng", name: "Английский язык" },
+        { code: "alg", name: "Алгебра" }
+      ];
+      const subjectsTbody = document.getElementById("subjects-tbody");
+      
+      subjects.forEach(subject => {
+        const tr = document.createElement("tr");
+        tr.setAttribute("data-subject", subject.code);
+  
+        // Первая ячейка – название предмета
+        const subjCell = document.createElement("td");
+        subjCell.textContent = subject.name;
+        tr.appendChild(subjCell);
+  
+        // Создаем 15 ячеек с выпадающими списками для оценок
+        for (let i = 1; i <= 15; i++) {
+          const td = document.createElement("td");
+          const select = document.createElement("select");
+          select.className = "grade-select";
+          select.name = `${subject.code}_grade_${i}`;
+  
+          // Добавляем пустую опцию (значение по умолчанию)
+          const emptyOption = document.createElement("option");
+          emptyOption.value = "";
+          emptyOption.textContent = "";
+          emptyOption.selected = true;
+          select.appendChild(emptyOption);
+  
+          for (let j = 1; j <= 10; j++) {
+            const option = document.createElement("option");
+            option.value = j;
+            option.textContent = j;
+            select.appendChild(option);
+          }
+  
+          // При изменении оценки обновляем данные в базе и пересчитываем средний балл
+          select.addEventListener("change", function() {
+            recalcAverage(tr);
+            updateGrade(subject.code, i, select.value);
+          });
+  
+          // Подписываемся на изменения оценок из базы: если данные изменятся, обновляем select
+          subscribeToGradeChanges(subject.code, i, select);
+  
+          td.appendChild(select);
+          tr.appendChild(td);
+        }
+  
+        // Ячейка для среднего балла (рассчитывается автоматически)
+        const avgTd = document.createElement("td");
+        const avgInput = document.createElement("input");
+        avgInput.type = "number";
+        avgInput.name = `${subject.code}_avg`;
+        avgInput.className = "avg-input";
+        avgInput.readOnly = true;
+        avgInput.step = "0.01";
+        avgInput.value = "0.00";
+        avgTd.appendChild(avgInput);
+        tr.appendChild(avgTd);
+  
+        // Ячейка для четвертной оценки (вычисляется автоматически)
+        const quarterTd = document.createElement("td");
+        const quarterInput = document.createElement("input");
+        quarterInput.type = "number";
+        quarterInput.name = `${subject.code}_quarter`;
+        quarterInput.className = "quarter-input";
+        quarterInput.step = "1";
+        quarterInput.readOnly = true;
+        quarterTd.appendChild(quarterInput);
+        tr.appendChild(quarterTd);
+  
+        subjectsTbody.appendChild(tr);
+  
+        // Начальный пересчёт среднего (если уже есть сохранённые значения)
+        recalcAverage(tr);
+      });
+      
+      // Функция обновления оценки в Firebase
+      function updateGrade(subjectCode, gradeIndex, value) {
+        firebase.database().ref('grades/' + subjectCode + '/grade_' + gradeIndex).set(value);
+      }
+      
+      // Функция подписки на изменения оценок из Firebase для синхронизации
+      function subscribeToGradeChanges(subjectCode, gradeIndex, selectElement) {
+        firebase.database().ref('grades/' + subjectCode + '/grade_' + gradeIndex)
+          .on('value', snapshot => {
+            const value = snapshot.val();
+            // Обновляем select, если данные изменились на сервере
+            selectElement.value = value || "";
+            recalcAverage(selectElement.closest("tr"));
+          });
+      }
+  
+      // Функция пересчёта среднего балла и вычисления четвертной оценки  
+      // по правилу: если дробная часть менее 0.5 → округляем вниз, если 0.5 и выше → округляем вверх.
+      function recalcAverage(row) {
+        const selects = row.querySelectorAll("select.grade-select");
+        let sum = 0, count = 0;
+        selects.forEach(sel => {
+          if (sel.value !== "") {
+            const val = Number(sel.value);
+            if (!isNaN(val)) {
+              sum += val;
+              count++;
+            }
+          }
+        });
+  
+        const avgInput = row.querySelector("input.avg-input");
+        const quarterInput = row.querySelector("input.quarter-input");
+  
+        if (count > 0) {
+          const avg = sum / count;
+          avgInput.value = avg.toFixed(2);
+          quarterInput.value = Math.round(avg); // Округляем по стандартному правилу
+        } else {
+          avgInput.value = "0.00";
+          quarterInput.value = "";
+        }
+      }
+      
+      // Обработка отправки формы (проверка курса и др.)
+      document.getElementById("diaryForm").addEventListener("submit", function(event) {
+        const courseInput = document.getElementById("course");
+        const courseValue = parseInt(courseInput.value, 10);
+        if (courseValue < 1 || courseValue > 11) {
+          alert("Ошибка! Курс должен быть цифрой от 1 до 11.");
+          event.preventDefault();
+          return;
+        }
+        // Здесь можно добавить отправку данных формы на сервер
+        event.preventDefault();
+        alert("Форма успешно отправлена!");
+      });
+    });
+  </script>
 </body>
 </html>

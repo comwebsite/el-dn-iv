@@ -1,337 +1,235 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Электронный дневник</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Срочные новости</title>
   <style>
-    /* Сброс и базовые стили для всей страницы */
+    /* Общий сброс */
     * {
-      box-sizing: border-box;
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
     }
     body {
-      font-family: Arial, sans-serif;
-      background: #f7f7f7;
-      padding: 20px;
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+      color: #333;
+      line-height: 1.6;
+      overflow-x: hidden;
     }
-    /* Контейнер растянут на всю ширину */
-    .container {
-      width: 100%;
-      padding: 20px;
+    a {
+      color: #dc3545;
+      text-decoration: none;
+      transition: color 0.3s ease;
     }
-    h1, h2, h3 {
+    a:hover {
+      color: #a71d2a;
+    }
+    header {
+      background-color: #dc3545;
+      color: #fff;
+      padding: 30px 20px;
       text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    header h1 {
+      font-size: 2.8em;
+      margin-bottom: 10px;
+      animation: slideInDown 1s ease-out forwards;
+    }
+    header p {
+      font-size: 1.2em;
+      animation: fadeIn 1.5s ease-in-out forwards;
+    }
+    
+    /* Анимация заголовка */
+    @keyframes slideInDown {
+      0% {
+        transform: translateY(-100%);
+        opacity: 0;
+      }
+      100% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    main {
+      padding: 20px;
+      animation: fadeIn 1.5s ease-in-out;
+    }
+    .news-article {
+      background: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      animation: scaleUp 0.5s ease-in-out forwards;
+    }
+    @keyframes scaleUp {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .news-article h2 {
+      font-size: 1.8em;
+      margin-bottom: 15px;
+      color: #dc3545;
+    }
+    .news-article p,
+    .news-article ul {
       margin-bottom: 15px;
     }
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
+    .news-article ul {
+      list-style: disc inside;
+      padding-left: 20px;
     }
-    /* Данные об ученике */
-    #student-info {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 15px;
-      margin-bottom: 20px;
-      padding-bottom: 15px;
-      border-bottom: 1px solid #ccc;
-    }
-    #student-info label {
-      font-weight: bold;
-      margin-bottom: 5px;
-      display: block;
-    }
-    #student-info input {
-      width: 100%;
-      padding: 5px 8px;
-    }
-    /* Двухколоночное расположение блоков */
-    .columns {
+    
+    /* Секция карточек */
+    .person-cards {
       display: flex;
       flex-wrap: wrap;
       gap: 20px;
+      margin-top: 20px;
     }
-    /* Левая колонка – информация об ученике (ещё уже) */
-    #blank-column {
-      flex: 0.6;
-      padding: 15px;
-      background: #fafafa;
+    .card {
+      background: #f8f9fa;
+      border-radius: 10px;
+      overflow: hidden;
+      width: calc(50% - 10px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transform: scale(0.95);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-    #subjects-column {
-      flex: 1.4;
-      padding: 15px;
-      background: #fafafa;
+    .card:hover {
+      transform: scale(1);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
     }
-    .column label {
-      font-weight: bold;
-      margin: 8px 0 4px;
+    .card img {
+      width: 100%;
+      height: auto;
       display: block;
     }
-    .column input[type="text"],
-    .column input[type="number"],
-    .column textarea {
-      width: 100%;
-      padding: 6px;
+    .card-content {
+      padding: 15px;
+    }
+    .card-content h3 {
       margin-bottom: 10px;
+      font-size: 1.4em;
+      color: #dc3545;
     }
-    /* Таблица с предметами */
-    #subjects-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
+    .card-content p {
+      font-size: 0.92em;
+      line-height: 1.4;
     }
-    #subjects-table th,
-    #subjects-table td {
-      border: 1px solid #ddd;
-      padding: 5px;
+    
+    footer {
+      background-color: #343a40;
+      color: #fff;
       text-align: center;
+      padding: 20px;
+      margin-top: 40px;
+      animation: slideInUp 1s ease-out forwards;
     }
-    /* Стили для выпадающих списков и инпутов */
-    .grade-select {
-      width: 50px;
-      padding: 2px;
-      text-align: center;
+    @keyframes slideInUp {
+      from {
+        transform: translateY(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
     }
-    .avg-input,
-    .quarter-input {
-      width: 80px;
-      padding: 4px;
-      text-align: center;
-    }
-    button {
-      align-self: center;
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    @media (max-width: 600px) {
-      .columns {
-        flex-direction: column;
+    
+    /* Адаптивность */
+    @media (max-width: 768px) {
+      .card {
+        width: 100%;
+      }
+      header h1 {
+        font-size: 2.2em;
       }
     }
   </style>
-  
-  <!-- Подключаем Firebase (используем версии 8.x для простоты) -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-  
-  <script>
-    // Замените эти данные на ваши конфигурационные данные из Firebase
-    var firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-      databaseURL: "https://YOUR_PROJECT_ID.firebaseio.com",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_PROJECT_ID.appspot.com",
-      messagingSenderId: "YOUR_SENDER_ID",
-      appId: "YOUR_APP_ID"
-    };
-    // Инициализируем Firebase
-    firebase.initializeApp(firebaseConfig);
-  </script>
-  
+  <!-- Подключение шрифта с Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="container">
-    <h1>Электронный дневник</h1>
-    <form id="diaryForm">
-      <!-- Данные об ученике -->
-      <section id="student-info">
-        <div>
-          <label for="name">Имя умельца:</label>
-          <input type="text" id="name" name="name" required />
-        </div>
-        <div>
-          <label for="organization">Организация:</label>
-          <input type="text" id="organization" name="organization" required />
-        </div>
-        <div>
-          <label for="class">Класс (буква):</label>
-          <input type="text" id="class" name="class" maxlength="1" pattern="[А-Яа-яA-Za-z]" required />
-        </div>
-        <div>
-          <label for="course">Курс (цифра от 1 до 11):</label>
-          <input type="number" id="course" name="course" min="1" max="11" required />
-        </div>
-      </section>
-      
-      <div class="columns">
-        <!-- Левая колонка – Информация о ученике -->
-        <div class="column" id="blank-column">
-          <h3>Информация о ученике</h3>
-          <label for="quarter">Четверть (например, Апрель - Май):</label>
-          <input type="text" id="quarter" name="quarter" placeholder="Апрель - Май" required />
-          <label for="date">Дата (с какой по какую, можно использовать точки/запятые):</label>
-          <input type="text" id="date" name="date" placeholder="01.01.2025 - 31.01.2025" required />
-          <label for="remarks">Замечания:</label>
-          <textarea id="remarks" name="remarks" rows="2"></textarea>
-          <label for="admin-signature">Подпись администратора:</label>
-          <input type="text" id="admin-signature" name="admin-signature" />
-          <label for="student-signature">Подпись умельца:</label>
-          <input type="text" id="student-signature" name="student-signature" />
-        </div>
-        
-        <!-- Правая колонка – Предметы -->
-        <div class="column" id="subjects-column">
-          <h3>Предметы</h3>
-          <table id="subjects-table">
-            <thead>
-              <tr>
-                <th>Предмет</th>
-                <th colspan="15">Оценки</th>
-                <th>Средний балл</th>
-                <th>Четвертная оценка</th>
-              </tr>
-            </thead>
-            <tbody id="subjects-tbody"></tbody>
-          </table>
+  <header>
+    <h1>Срочные новости</h1>
+    <p>09.06.2025 в промежутке времени 12:30-14:00</p>
+  </header>
+  <main>
+    <!-- Новостная статья -->
+    <div class="news-article">
+      <h2>Шокирующие события в организации</h2>
+      <p>
+        Курьянович Полина Андреевна, работающая юристом в организации, во время рабочего часа со злостью подожгла свой личный кабинет. Одним из свидетелей был ее коллега Санаторийский Анатолий Сергеевич, когда тот начал набирать номер милиции – он был забит до потери сознания, а затем его тело затащили в горящий кабинет и спрятали в шкафу.
+      </p>
+      <p>
+        Позже на место пожара прибежала администраторша организации Рудько Александра Петровна, при виде которой Полина Андреевна облила её кипятком, что привело к ожогам лица 2 степени. Ударившись об стену, она погибла на месте. По неизвестной причине Курьянович Полина также разбивала все окна на своем этаже и забила дубинкой ещё двоих сотрудников.
+      </p>
+    </div>
+    
+    <!-- Карточки пострадавших и свидетелей -->
+    <section class="person-cards">
+      <div class="card">
+        <img src="https://www.bing.com/th/id/OIP.vOcC_P1SsqhSgBBLQq7TRgHaKW?w=160&h=211&c=8&rs=1&qlt=90&o=6&dpr=1.1&pid=3.1&rm=2" alt="Санаторийский Анатолий Сергеевич">
+        <div class="card-content">
+          <h3>Санаторийский Анатолий Сергеевич</h3>
+          <p>32 года, юрист-консультант, специализирующийся на гражданском праве и корпоративных договорах. Отличается методичностью и аналитическим складом ума, всегда доводил дела до логического завершения. Статус: мёртв</p>
         </div>
       </div>
-      <button type="submit">Отправить</button>
-    </form>
-  </div>
-  
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      const subjects = [
-        { code: "eng", name: "Английский язык" },
-        { code: "alg", name: "Алгебра" }
-      ];
-      const subjectsTbody = document.getElementById("subjects-tbody");
-      
-      subjects.forEach(subject => {
-        const tr = document.createElement("tr");
-        tr.setAttribute("data-subject", subject.code);
-  
-        // Первая ячейка – название предмета
-        const subjCell = document.createElement("td");
-        subjCell.textContent = subject.name;
-        tr.appendChild(subjCell);
-  
-        // Создаем 15 ячеек с выпадающими списками для оценок
-        for (let i = 1; i <= 15; i++) {
-          const td = document.createElement("td");
-          const select = document.createElement("select");
-          select.className = "grade-select";
-          select.name = `${subject.code}_grade_${i}`;
-  
-          // Добавляем пустую опцию (значение по умолчанию)
-          const emptyOption = document.createElement("option");
-          emptyOption.value = "";
-          emptyOption.textContent = "";
-          emptyOption.selected = true;
-          select.appendChild(emptyOption);
-  
-          for (let j = 1; j <= 10; j++) {
-            const option = document.createElement("option");
-            option.value = j;
-            option.textContent = j;
-            select.appendChild(option);
-          }
-  
-          // При изменении оценки обновляем данные в базе и пересчитываем средний балл
-          select.addEventListener("change", function() {
-            recalcAverage(tr);
-            updateGrade(subject.code, i, select.value);
-          });
-  
-          // Подписываемся на изменения оценок из базы: если данные изменятся, обновляем select
-          subscribeToGradeChanges(subject.code, i, select);
-  
-          td.appendChild(select);
-          tr.appendChild(td);
-        }
-  
-        // Ячейка для среднего балла (рассчитывается автоматически)
-        const avgTd = document.createElement("td");
-        const avgInput = document.createElement("input");
-        avgInput.type = "number";
-        avgInput.name = `${subject.code}_avg`;
-        avgInput.className = "avg-input";
-        avgInput.readOnly = true;
-        avgInput.step = "0.01";
-        avgInput.value = "0.00";
-        avgTd.appendChild(avgInput);
-        tr.appendChild(avgTd);
-  
-        // Ячейка для четвертной оценки (вычисляется автоматически)
-        const quarterTd = document.createElement("td");
-        const quarterInput = document.createElement("input");
-        quarterInput.type = "number";
-        quarterInput.name = `${subject.code}_quarter`;
-        quarterInput.className = "quarter-input";
-        quarterInput.step = "1";
-        quarterInput.readOnly = true;
-        quarterTd.appendChild(quarterInput);
-        tr.appendChild(quarterTd);
-  
-        subjectsTbody.appendChild(tr);
-  
-        // Начальный пересчёт среднего (если уже есть сохранённые значения)
-        recalcAverage(tr);
-      });
-      
-      // Функция обновления оценки в Firebase
-      function updateGrade(subjectCode, gradeIndex, value) {
-        firebase.database().ref('grades/' + subjectCode + '/grade_' + gradeIndex).set(value);
-      }
-      
-      // Функция подписки на изменения оценок из Firebase для синхронизации
-      function subscribeToGradeChanges(subjectCode, gradeIndex, selectElement) {
-        firebase.database().ref('grades/' + subjectCode + '/grade_' + gradeIndex)
-          .on('value', snapshot => {
-            const value = snapshot.val();
-            // Обновляем select, если данные изменились на сервере
-            selectElement.value = value || "";
-            recalcAverage(selectElement.closest("tr"));
-          });
-      }
-  
-      // Функция пересчёта среднего балла и вычисления четвертной оценки  
-      // по правилу: если дробная часть менее 0.5 → округляем вниз, если 0.5 и выше → округляем вверх.
-      function recalcAverage(row) {
-        const selects = row.querySelectorAll("select.grade-select");
-        let sum = 0, count = 0;
-        selects.forEach(sel => {
-          if (sel.value !== "") {
-            const val = Number(sel.value);
-            if (!isNaN(val)) {
-              sum += val;
-              count++;
-            }
-          }
-        });
-  
-        const avgInput = row.querySelector("input.avg-input");
-        const quarterInput = row.querySelector("input.quarter-input");
-  
-        if (count > 0) {
-          const avg = sum / count;
-          avgInput.value = avg.toFixed(2);
-          quarterInput.value = Math.round(avg); // Округляем по стандартному правилу
-        } else {
-          avgInput.value = "0.00";
-          quarterInput.value = "";
-        }
-      }
-      
-      // Обработка отправки формы (проверка курса и др.)
-      document.getElementById("diaryForm").addEventListener("submit", function(event) {
-        const courseInput = document.getElementById("course");
-        const courseValue = parseInt(courseInput.value, 10);
-        if (courseValue < 1 || courseValue > 11) {
-          alert("Ошибка! Курс должен быть цифрой от 1 до 11.");
-          event.preventDefault();
-          return;
-        }
-        // Здесь можно добавить отправку данных формы на сервер
-        event.preventDefault();
-        alert("Форма успешно отправлена!");
-      });
-    });
-  </script>
+      <div class="card">
+        <img src="https://th.bing.com/th/id/OIP.NpBA9Pw5E_NXu8XE3YsokQHaJ4?w=216&h=288&c=8&rs=1&qlt=90&o=6&dpr=1.1&pid=3.1&rm=2" alt="Рудько Александра Петровна">
+        <div class="card-content">
+          <h3>Рудько Александра Петровна</h3>
+          <p>30 лет, администратор юридической организации. Организованная и внимательная, следила за порядком в офисе и координировала работу юристов, быстро решая административные вопросы. Статус: мёртва</p>
+        </div>
+      </div>
+      <div class="card">
+        <img src="https://th.bing.com/th/id/OIP.ZOUsaQ5jZwWeCwcXexaj3wHaJe?w=150&h=191&c=7&r=0&o=7&dpr=1.1&pid=1.7&rm=3" alt="Зарецкий Виктор Михайлович">
+        <div class="card-content">
+          <h3>Зарецкий Виктор Михайлович</h3>
+          <p>31 год, специалист по трудовому праву. Энергичный и целеустремленный, известный своей нестандартностью и готовностью помочь коллегам с советом и поддержкой. Статус: тяжелое состояние</p>
+        </div>
+      </div>
+      <div class="card">
+        <img src="data:image/webp;base64,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" alt="Савко Артем Николаевич">
+        <div class="card-content">
+          <h3>Савко Артем Николаевич</h3>
+          <p>24 года, адвокат, занимающийся уголовными и административными делами. Обладал хорошей интуицией и умел убеждать, что делало его успешным в судебных процессах. Статус: тяжелое состояние</p>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Новостная статья с информацией о розыске -->
+    <div class="news-article">
+      <h2>Объявлена в розыск и предъявлены обвинения</h2>
+      <p>
+        За совершённые нарушения Курьянович Полина Андреевна объявлена в розыск Беларуси. Ей грозит тюрьма по следующим статьям:
+      </p>
+      <ul>
+        <li>Убийство (статья 139 УК РБ)</li>
+        <li>Причинение тяжких телесных повреждений (статья 147 УК РБ)</li>
+        <li>Умышленные уничтожение или повреждение имущества (статья 218 УК РБ)</li>
+        <li>Поджог (статья 218 УК РБ, часть 2)</li>
+      </ul>
+      <p>
+        Просим связаться с нами по почте: <a href="mailto:News08by">@News08by</a> если найдете информацию о местонахождении Полины Курьянович. Будьте внимательны.
+      </p>
+    </div>
+  </main>
+  <footer>
+    <p>&copy; News09.by 2025. Все права защищены.</p>
+  </footer>
 </body>
 </html>
